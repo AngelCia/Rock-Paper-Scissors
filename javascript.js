@@ -1,7 +1,7 @@
 let winner, loser, tied;
 
 function getComputerChoice(){
-    const rndInt = Math.floor(Math.random() * 3) + 1
+    const rndInt = Math.floor(Math.random() * 3) + 1;
     let computerChoice;
     switch (rndInt){
     case 1:
@@ -19,11 +19,10 @@ function getComputerChoice(){
 }
 
 function getPlayerChoice(){
-    let playerChoice = prompt("Choose rock, paper, or scissors");
-    playerChoice = playerChoice.toLowerCase();
+    let playerChoice = prompt("Choose rock, paper, or scissors").toLowerCase();
     for(playerChoice; ((playerChoice != "rock") && (playerChoice != "paper") && (playerChoice != "scissors"));){
         alert("Incorrect value, please try again");
-        playerChoice = prompt("Choose rock, paper, or scissors");
+        playerChoice = prompt("Choose rock, paper, or scissors").toLowerCase();
     }
     console.log(playerChoice);
     return playerChoice;
@@ -34,12 +33,12 @@ function playRound(playerSelection, computerSelection){
     winner = "You win! " + playerCap + " beats " + computerSelection + "!";
     loser = "You lose! " + computerSelection + " beats " + playerCap + "!";
     tied = "It's a tie!";
-    let result = playerSelection.toLowerCase() + ", " + computerSelection.toLowerCase();
+    let result = playerSelection.concat(", ", computerSelection.toLowerCase());
 
     if(result == "rock, rock" || result == "scissors, scissors" || result == "paper, paper"){
         console.log(null);
         return null;        
-    }else if(result =="rock, scissors" || result == "paper, rock" || result == "scissors, paper"){
+    }else if(result == "rock, scissors" || result == "paper, rock" || result == "scissors, paper"){
         console.log(true);
         return true;       
     }else if(result == "rock, paper" || result == "paper, scissors" || result == "scissors, rock"){
@@ -52,15 +51,18 @@ function game(){
     let win = 0;
     let lose = 0;
 
-    for(let x = 0; x < 5; x++){
+
+    for(let x = 0; x < 5;){
         let result = playRound(getPlayerChoice(), getComputerChoice());
         switch(result){
             case true:
                 win++;
+                x++;
                 console.log(winner);
                 alert(winner);
                 break;
             case false:
+                x++;
                 lose++;
                 console.log(loser);
                 alert(loser);
@@ -72,24 +74,15 @@ function game(){
         }
     }
 
-    switch(win > lose){
-        case true:
-            console.log("You Won! " + win + " to " + lose + ".");
-            return("You Won! " + win + " to " + lose + ".");
-            break;
-        case false:
-            switch(win < lose){
-                case true:
-                    console.log("You Lost :( " + win + " to " + lose + ".");
-                    return("You Lost :( " + win + " to " + lose + ".");
-                    break;
-                default:
-                    console.log("It was a tie " + win + " to " + lose + ".");
-                    return("It was a tie " + win + " to " + lose + ".");
-                    break;
-            }
-            break;
+    if(win > lose){
+        let finalWin = "You Won! " + win + " to " + lose + ".";
+        console.log(finalWin);
+        return(finalWin);
+    }else{
+            let finalLoss = "You Lost :( " + win + " to " + lose + ".";
+            console.log(finalLoss);
+            return(finalLoss);
     }
 }
 
-game();
+alert(game());
