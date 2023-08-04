@@ -1,4 +1,37 @@
 let winner, loser, tied;
+let win = 0;
+let lose = 0;
+
+const btns = document.querySelectorAll('button');
+
+for(const btn of btns){
+    btn.addEventListener('click', () =>{
+        let playerSelection = btn.className;
+        let result = playRound(playerSelection, getComputerChoice());
+        tallyScore(result);
+        let won = checkIfWinner(win, lose);
+        if(won){
+            win = 0;
+            lose = 0;
+        }
+    })
+}
+
+function checkIfWinner(win, lose){
+    if((win == 5) || (lose == 5)){
+        if(win > lose){
+            let finalWin = "You Won! " + win + " to " + lose + ".";
+            printToDiv(finalWin);
+            return true;
+        }else{
+            let finalLoss = "You Lost :( " + win + " to " + lose + ".";
+            printToDiv(finalLoss);
+            return true;
+        }
+    } else {
+        return false
+    }
+}
 
 function getComputerChoice(){
     const rndInt = Math.floor(Math.random() * 3) + 1;
@@ -14,18 +47,7 @@ function getComputerChoice(){
         computerChoice = "Scissors";
         break;
     }
-    console.log(computerChoice);
     return computerChoice;
-}
-
-function getPlayerChoice(){
-    let playerChoice = prompt("Choose rock, paper, or scissors").toLowerCase();
-    for(playerChoice; ((playerChoice != "rock") && (playerChoice != "paper") && (playerChoice != "scissors"));){
-        alert("Incorrect value, please try again");
-        playerChoice = prompt("Choose rock, paper, or scissors").toLowerCase();
-    }
-    console.log(playerChoice);
-    return playerChoice;
 }
 
 function playRound(playerSelection, computerSelection){
@@ -36,53 +58,40 @@ function playRound(playerSelection, computerSelection){
     let result = playerSelection.concat(", ", computerSelection.toLowerCase());
 
     if(result == "rock, rock" || result == "scissors, scissors" || result == "paper, paper"){
-        console.log(null);
-        return null;        
+        printToDiv(tied);
+        return null;
     }else if(result == "rock, scissors" || result == "paper, rock" || result == "scissors, paper"){
-        console.log(true);
-        return true;       
+        printToDiv(winner);  
+        return true;
     }else if(result == "rock, paper" || result == "paper, scissors" || result == "scissors, rock"){
-        console.log(false);
+        printToDiv(loser);
         return false;
     }
 }
 
-function game(){
-    let win = 0;
-    let lose = 0;
-
-
-    for(let x = 0; x < 5;){
-        let result = playRound(getPlayerChoice(), getComputerChoice());
-        switch(result){
-            case true:
-                win++;
-                x++;
-                console.log(winner);
-                alert(winner);
-                break;
-            case false:
-                x++;
-                lose++;
-                console.log(loser);
-                alert(loser);
-                break;
-            default:
-                console.log(tied);
-                alert(tied);
-                break;
-        }
-    }
-
-    if(win > lose){
-        let finalWin = "You Won! " + win + " to " + lose + ".";
-        console.log(finalWin);
-        return(finalWin);
-    }else{
-            let finalLoss = "You Lost :( " + win + " to " + lose + ".";
-            console.log(finalLoss);
-            return(finalLoss);
-    }
+function printToDiv(result){
+    let resultsElement = document.getElementById('results');
+    resultsElement.textContent = result;
 }
 
-alert(game());
+function printScore(win, lose){
+    let scoreElement = document.getElementById('score');
+    let score = "Won: " + win + " Lost: " + lose;
+    scoreElement.textContent = score;
+}
+
+function tallyScore(result){
+    switch(result){
+        case true:
+            win++;
+            printScore(win, lose);
+            break;
+        case false:
+            lose++;
+            printScore(win, lose);
+            break;
+        default:
+            printScore(win, lose);
+            break;
+    }     
+}
